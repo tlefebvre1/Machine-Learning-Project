@@ -1,0 +1,98 @@
+---
+title: "Practical Machine Learning"
+subtitle: "Prediction Assignment Writeup"
+author: "Thibaut Lefebvre"
+date: "8 January 2017"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Summary
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks.
+
+One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, we will use data recorded from accelerometers on the belt, forearm, arm, and dumbbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.
+
+More information is available from the website http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+The goal of this project is to predict the manner in which the volunteers did the exercise. The outcome is classified as either "A", "B", "C", "D" or "E”.
+
+## Preparation
+
+```{r library}
+library(caret)
+library(randomForest)
+```
+
+```{r seed}
+set.seed(42)
+```
+
+## Data loading
+
+```{r loading}
+dataset <- read.csv("pml-training.csv", na.strings = c("NA", "#DIV/0!", ""))
+dim(dataset)
+```
+
+## Data cleaning
+
+Remove incomplete columns from the dataset (the ones with NA values) along with some irrelevant variables (columns 1 to 7).
+
+```{r cleaning}
+NAcount <- sapply(1:dim(dataset)[2], function(x)sum(is.na(dataset[,x])))
+NAcols <- which(NAcount > 0)
+dataset <- dataset[,-NAcols]
+dataset <- dataset[,-c(1:7)]
+dataset$classe <- as.factor(dataset$classe)
+dim(dataset)
+head(dataset)
+```
+
+## Training
+
+Create a partition of the dataset into a training dataset and a test dataset. 
+
+```{r partition}
+inTrain <- createDataPartition(y = dataset$classe, p = 0.6, list = FALSE)
+training <- dataset[inTrain,]
+testing <- dataset[-inTrain,]
+```
+
+The model is based on a random forest.
+
+```{r training, cache = TRUE}
+model <- randomForest(classe ~ ., data = training, method = 'class')
+```
+
+## Testing
+
+Evaluate the quality of the previous model.
+
+```{r predictions}
+pred <- predict(model, newdata = testing, type = 'class')
+confusionMatrix(pred, testing$classe)
+```
+
+The previous model satisfies 99% accuracy on the testing dataset (with a significance level of 5%). 
+
+## Predictions
+
+Use this model to predict the class of 20 entries.
+
+```{r test}
+testset <- read.csv("pml-testing.csv", na.strings = c("NA", "#DIV/0!", ""))
+NAcount <- sapply(1:dim(testset)[2], function(x)sum(is.na(testset[,x])))
+NAcols <- which(NAcount > 0)
+testset <- testset[,-NAcols]
+testset <- testset[,-c(1:7)]
+dim(testset)
+result <- predict(model, newdata = testset, type='class')
+result
+```
+
+## Conclusion
+
+The proposed model, based on random forests, seems relevant enough to perform the required task of class prediction.
