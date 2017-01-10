@@ -64,7 +64,7 @@ training <- dataset[inTrain,]
 testing <- dataset[-inTrain,]
 ```
 
-The model is based on a random forest.
+We want to predict the class variable ("A", "B", "C", "D" or "E”) by using all the remaining variables in the dataset. We first tried making predictions by using a single decision tree (for its simplicity) but the accuracy was poor. Thus we switched to the model below which is based on random forests (regarded as a natural combination of many decision trees).
 
 ```{r training, cache = TRUE}
 model <- randomForest(classe ~ ., data = training, method = 'class')
@@ -72,7 +72,7 @@ model <- randomForest(classe ~ ., data = training, method = 'class')
 
 ## Testing
 
-Evaluate the quality of the previous model.
+Evaluate the quality of this model on the previously defined test dataset (for cross validation). 
 
 ```{r predictions}
 pred <- predict(model, newdata = testing, type = 'class')
