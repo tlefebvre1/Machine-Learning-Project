@@ -254,7 +254,7 @@ dim(dataset)</code></pre>
 <pre class="r"><code>inTrain &lt;- createDataPartition(y = dataset$classe, p = 0.6, list = FALSE)
 training &lt;- dataset[inTrain,]
 testing &lt;- dataset[-inTrain,]</code></pre>
-<p>We want to predict the class variable (“A”, “B”, “C”, “D” or “E”) by using all the remaining variables in the dataset. We first tried making predictions by using a single decision tree (for its simplicity) but the accuracy was poor. Thus we switched to the model below which is based on random forests (regarded as a natural combination of many decision trees).</p>
+<p>We want to predict the “classe” variable (“A”, “B”, “C”, “D” or “E”) by using all the remaining variables in the dataset. We first tried making predictions by using a single decision tree (for its simplicity) but the accuracy was poor. Thus we switched to the model below which is based on random forests (regarded as a natural combination of many decision trees).</p>
 <pre class="r"><code>model &lt;- randomForest(classe ~ ., data = training, method = 'class')</code></pre>
 </div>
 <div id="testing" class="section level2">
@@ -297,7 +297,7 @@ confusionMatrix(pred, testing$classe)</code></pre>
 </div>
 <div id="predictions" class="section level2">
 <h2>Predictions</h2>
-<p>Use this model to predict the class of 20 entries.</p>
+<p>Use this model to predict the outcome of 20 entries.</p>
 <pre class="r"><code>testset &lt;- read.csv(&quot;pml-testing.csv&quot;, na.strings = c(&quot;NA&quot;, &quot;#DIV/0!&quot;, &quot;&quot;))
 NAcount &lt;- sapply(1:dim(testset)[2], function(x)sum(is.na(testset[,x])))
 NAcols &lt;- which(NAcount &gt; 0)
@@ -313,7 +313,7 @@ result</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
-<p>The proposed model, based on random forests, seems relevant enough to perform the required task of class prediction.</p>
+<p>The proposed model, based on random forests, seems relevant enough to perform the required task of prediction.</p>
 </div>
 
 

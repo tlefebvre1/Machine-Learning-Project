@@ -189,7 +189,7 @@ training <- dataset[inTrain,]
 testing <- dataset[-inTrain,]
 ```
 
-We want to predict the class variable ("A", "B", "C", "D" or "E”) by using all the remaining variables in the dataset. We first tried making predictions by using a single decision tree (for its simplicity) but the accuracy was poor. Thus we switched to the model below which is based on random forests (regarded as a natural combination of many decision trees).
+We want to predict the "classe" variable ("A", "B", "C", "D" or "E”) by using all the remaining variables in the dataset. We first tried making predictions by using a single decision tree (for its simplicity) but the accuracy was poor. Thus we switched to the model below which is based on random forests (regarded as a natural combination of many decision trees).
 
 
 ```r
@@ -244,7 +244,7 @@ The previous model satisfies 99% accuracy on the testing dataset (with a signifi
 
 ## Predictions
 
-Use this model to predict the class of 20 entries.
+Use this model to predict the outcome of 20 entries.
 
 
 ```r
@@ -273,4 +273,5 @@ result
 
 ## Conclusion
 
-The proposed model, based on random forests, seems relevant enough to perform the required task of class prediction.
+The proposed model, based on random forests, seems relevant enough to perform the required task of prediction.
+
